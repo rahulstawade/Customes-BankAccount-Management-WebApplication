@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	
+	<package name="main" extends="struts-default" namespace="/">
+	
+
+
+		<!-- INTERCEPTOR -->
+		<interceptors>
+			<interceptor name="SessionCheckInterceptor"
+				class="com.techlabs.interceptor.SessionCheckInterceptor">
+			</interceptor>
+
+			<interceptor name="redirectMessage"
+				class="com.techlabs.interceptor.RedirectMessageInterceptor" />
+
+
+			<interceptor-stack name="loginInterceptor">
+				<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="redirectMessage" />
+				<interceptor-ref name="SessionCheckInterceptor" />
+			</interceptor-stack>
+		</interceptors>
+
+
+
+
+		<!-- ACTIONS -->
+
+		<action name="">
+		<result>index.html</result>
+		</action>
+		<action name="loginPage">
+			<result>/WEB-INF/loginPage.jsp</result>
+		</action>
+		<action name="logOut" class="com.techlabs.action.UserAction"
+			method="logOutUser">
+
+			<result name="loggedOut">/WEB-INF/loginPage.jsp</result>
+		</action>
+
+		<action name="addNewCustomer">
+			<interceptor-ref name="loginInterceptor"></interceptor-ref>
+			<result name="login" type="chain">loginPage</result>
+			<result>/WEB-INF/addnewcustomerPage.jsp</result>
+		</action>
+
+		<action name="addNewCustAccountAction" class="com.techlabs.action.EmployeeAction"
+			method="addNewAccount">
+			<interceptor-ref name="loginInterceptor"></interceptor-ref>
+			<result name="login" type="chain">loginPage</result>
+			<result name="accountAdded" type="redirectAction">employeeWelcome
+			</result>
+			<result name="unsuccessfull" type="redirectAction">addNewCustAccount
+			</result>
+		</action>
+
+		<action name="addNewCustAccount">
+			<interceptor-ref name="loginInterceptor"></interceptor-ref>
+			<result name="login" type="chain">loginPage</result>
+			<result>/WEB-INF/addnewcustomeraccPage.jsp</result>
+		</action>
+
+		<action name="changePasswordCustomer">
+			<interceptor-ref name="loginInterceptor"></interceptor-ref>
+			<result name="login" type="chain">loginPage</result>
+			<result>/WEB-INF/changepasswordcustPage.jsp</result>
+		</action>
+
+		<action name="changePasswordEmployee">
+			<interceptor-ref name="loginInterceptor"></interceptor-ref>
+			<result name="login" type="chain">loginPage</result>
+			<result>/WEB-INF/changepasswordempPage.jsp</result>
+		</action>
+
+		<action name="employeeWelcome" class="com.techlabs.action.EmployeeAction"
+			method="getEmployee">
+			<interceptor-ref name="loginInterceptor"></interceptor-ref>
+			<result name="login" type="chain">loginPage</result>
+			<result name="employeeDetailsFilled">/WEB-INF/employeewelcomePage.jsp</result>
+			<result name="unsuccessfull">/WEB-INF/employeewelcomePage.jsp</result>
+		</action>
+
+		<action name="customerWelcome" class="com.techlabs.action.CustomerAction"
+			method="getAccounts">
+			<interceptor-ref name="loginInterceptor"></interceptor-ref>
+			<result name="login" type="chain">loginPage</result>
+			<result name="accountsFetched">/WEB-INF/customerwelcomePage.jsp</result>
+			<result name="unsuccessfull">/WEB-INF/customerwelcomePage.jsp</result>
+		</action>
+
+
+
+		<action name="loginCheckAction" class="com.techlabs.action.UserAction"
+			method="authenticateUser">
+
+			<result name="customer" type="redirectAction">customerWelcome</result>
+			<result name="employee" type="redirectAction">employeeWelcome</result>
+			<result name="unsuccessfull">/WEB-INF/loginPage.jsp</result>
+		</action>
+
+
+		<action name="addnewCustomerAction" class="com.techlabs.action.EmployeeAction"
+			method="addNewCustomerAccount">
+			<interceptor-ref name="loginInterceptor"></interceptor-ref>
+			<result name="login" type="chain">loginPage</result>
+			<result name="customerAdded" type="redirectAction">employeeWelcome
+			</result>
+			<result name="unsuccessfull" type="redirectAction">addNewCustomer</result>
+		</action>
+
+
+		<action name="changeCustomerPasswordAction" class="com.techlabs.action.UserAction"
+			method="changePassword">
+			<interceptor-ref name="loginInterceptor"></interceptor-ref>
+			<result name="login" type="chain">loginPage</result>
+			<result name="customer" type="redirectAction">customerWelcome</result>
+			<result name="unsuccessfull" type="redirectAction">changePasswordCustomer
+			</result>
+		</action>
+
+		<action name="changeEmployeePasswordAction" class="com.techlabs.action.UserAction"
+			method="changePassword">
+			<interceptor-ref name="loginInterceptor"></interceptor-ref>
+			<result name="login" type="chain">loginPage</result>
+			<result name="employee" type="redirectAction">employeeWelcome</result>
+			<result name="unsuccessfull" type="redirectAction">changePasswordEmployee
+			</result>
+		</action>
+
+		<action name="changeAccStatus">
+			<interceptor-ref name="loginInterceptor"></interceptor-ref>
+			<result name="login" type="chain">loginPage</result>
+			<result>/WEB-INF/changeaccstatusPage.jsp</result>
+		</action>
+
+		<action name="fetchValues" class="com.techlabs.action.EmployeeAction"
+			method="getCustomer">
+			<interceptor-ref name="loginInterceptor"></interceptor-ref>
+			<result name="login" type="chain">loginPage</result>
+			<result name="valuesSet">/WEB-INF/changeaccstatusPage.jsp</result>
+			<result name="unsuccessfull" type="redirectAction">changeAccStatus
+			</result>
+		</action>
+
+		<action name="changeAccountStatusAction" class="com.techlabs.action.EmployeeAction"
+			method="changeCustomerStatus">
+			<interceptor-ref name="loginInterceptor"></interceptor-ref>
+			<result name="login" type="chain">loginPage</result>
+			<result name="statusUpdated" type="redirectAction">employeeWelcome</result>
+			<result name="unsuccessfull" type="redirectAction">changeAccStatus
+			</result>
+		</action>
+
+		<action name="manageCustomerAccount" class="com.techlabs.action.EmployeeAction"
+			method="initilizeList">
+			<interceptor-ref name="loginInterceptor"></interceptor-ref>
+			<result name="login" type="chain">loginPage</result>
+			<result name="accListInitialized">/WEB-INF/managecustaccPage.jsp</result>
+		</action>
+
+		<action name="getAccountList" class="com.techlabs.action.EmployeeAction"
+			method="getCustomerAccounts">
+			<interceptor-ref name="loginInterceptor"></interceptor-ref>
+			<result name="login" type="chain">loginPage</result>
+			<result name="accList">/WEB-INF/managecustaccPage.jsp</result>
+			<result name="unsuccessfull" type="redirectAction">manageCustomerAccount
+			</result>
+		</action>
+
+		<action name="getAccountBalance" class="com.techlabs.action.EmployeeAction"
+			method="getAccountBalance">
+			<interceptor-ref name="loginInterceptor"></interceptor-ref>
+			<result name="login" type="chain">loginPage</result>
+			<result name="balancereturned">/WEB-INF/managecustaccPage.jsp</result>
+			<result name="unsuccessfull" type="redirectAction">manageCustomerAccount
+			</result>
+		</action>
+
+		<action name="manageCustomerAccountAction" class="com.techlabs.action.EmployeeAction"
+			method="operationOnAccount">
+			<interceptor-ref name="loginInterceptor"></interceptor-ref>
+			<result name="login" type="chain">loginPage</result>
+			<result name="unsuccessfull" type="redirectAction">manageCustomerAccount
+			</result>
+			<result name="balanceUpdated" type="redirectAction">employeeWelcome</result>
+		</action>
+		<action name="registerPayee">
+			<interceptor-ref name="loginInterceptor"></interceptor-ref>
+			<result name="login" type="chain">loginPage</result>
+			<result>/WEB-INF/registerpayeepagePage.jsp</result>
+		</action>
+		<action name="registerPayeeAction" class="com.techlabs.action.CustomerAction"
+			method="addPayee">
+			<interceptor-ref name="loginInterceptor"></interceptor-ref>
+			<result name="login" type="chain">loginPage</result>
+			<result name="payeeAdded" type="redirectAction">customerWelcome</result>
+			<result name="unsuccessfull" type="redirectAction">registerPayee
+			</result>
+		</action>
+
+
+		<action name="transferMoney" class="com.techlabs.action.CustomerAction"
+			method="prepareAccandPayeeList">
+			<interceptor-ref name="loginInterceptor"></interceptor-ref>
+			<result name="login" type="chain">loginPage</result>
+			<result name="listLodded">/WEB-INF/transfermoneyPage.jsp</result>
+		</action>
+
+		<action name="transferMoneyAction" class="com.techlabs.action.CustomerAction"
+			method="transferMoney">
+			<interceptor-ref name="loginInterceptor"></interceptor-ref>
+			<result name="login" type="chain">loginPage</result>
+
+			<result name="moneyTransferred" type="redirectAction">customerWelcome
+			</result>
+			<result name="unsuccessfull" type="redirectAction">transferMoney</result>
+		</action>
+
+		<action name="updateCustomerAction" class="com.techlabs.action.CustomerAction"
+			method="updateCustomerProfile">
+			<interceptor-ref name="loginInterceptor"></interceptor-ref>
+			<result name="login" type="chain">loginPage</result>
+			<result name="updated" type="redirectAction">customerWelcome</result>
+			<result name="unsuccessfull" type="redirectAction">updateProfileCustomer
+			</result>
+		</action>
+
+
+		<action name="updateProfileCustomer" class="com.techlabs.action.CustomerAction"
+			method="fetchValues">
+			<interceptor-ref name="loginInterceptor"></interceptor-ref>
+			<result name="login" type="chain">loginPage</result>
+			<result name="valuesInitialized">/WEB-INF/updateprofilecustPage.jsp</result>
+		</action>
+
+		<action name="updateProfileEmployee" class="com.techlabs.action.EmployeeAction"
+			method="fetchValues">
+			<interceptor-ref name="loginInterceptor"></interceptor-ref>
+			<result name="login" type="chain">loginPage</result>
+			<result name="valuesInitialized">/WEB-INF/updateprofileempPage.jsp</result>
+		</action>
+
+		<action name="updateEmployeeAction" class="com.techlabs.action.EmployeeAction"
+			method="updateEmployeeProfile">
+			<interceptor-ref name="loginInterceptor"></interceptor-ref>
+			<result name="login" type="chain">loginPage</result>
+			<result name="updated" type="redirectAction">employeeWelcome</result>
+			<result name="unsuccessfull" type="redirectAction">updateProfileEmployee
+			</result>
+
+		</action>
+
+	</package>
+
+</struts>
